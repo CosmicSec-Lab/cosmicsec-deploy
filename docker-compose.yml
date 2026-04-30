@@ -164,7 +164,7 @@ services:
   # API Gateway
   api-gateway:
     build:
-      context: .
+      context: ../cosmicsec-core
       dockerfile: services/api_gateway/Dockerfile
     container_name: cosmicsec-api-gateway
     environment:
@@ -202,7 +202,7 @@ services:
   # Auth Service
   auth-service:
     build:
-      context: .
+      context: ../cosmicsec-services
       dockerfile: services/auth_service/Dockerfile
     container_name: cosmicsec-auth-service
     environment:
@@ -237,7 +237,7 @@ services:
   # Scan Service
   scan-service:
     build:
-      context: .
+      context: ../cosmicsec-services
       dockerfile: services/scan_service/Dockerfile
     container_name: cosmicsec-scan-service
     environment:
@@ -279,7 +279,7 @@ services:
   # AI Service (Phase 2 — ChromaDB + MITRE ATT&CK + LangChain)
   ai-service:
     build:
-      context: .
+      context: ../cosmicsec-ai
       dockerfile: services/ai_service/Dockerfile
     container_name: cosmicsec-ai-service
     environment:
@@ -313,7 +313,7 @@ services:
   # Recon Service
   recon-service:
     build:
-      context: .
+      context: ../cosmicsec-services
       dockerfile: services/recon_service/Dockerfile
     container_name: cosmicsec-recon-service
     environment:
@@ -350,7 +350,7 @@ services:
   # Centralized outbound strategy / probe service
   egress-service:
     build:
-      context: .
+      context: ../cosmicsec-services
       dockerfile: services/egress_service/Dockerfile
     container_name: cosmicsec-egress-service
     environment:
@@ -375,7 +375,7 @@ services:
   # Report Service
   report-service:
     build:
-      context: .
+      context: ../cosmicsec-services
       dockerfile: services/report_service/Dockerfile
     container_name: cosmicsec-report-service
     environment:
@@ -399,8 +399,8 @@ services:
   # Collab Service — Phase 2 real-time team collaboration
   collab-service:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../cosmicsec-services
+      dockerfile: services/collab_service/Dockerfile
     container_name: cosmicsec-collab-service
     environment:
       - ENVIRONMENT=${ENVIRONMENT:-development}
@@ -424,8 +424,8 @@ services:
   # Plugin Registry — Phase 2 plugin SDK management
   plugin-registry:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../cosmicsec-core
+      dockerfile: plugins/Dockerfile
     container_name: cosmicsec-plugin-registry
     environment:
       - COSMICSEC_PLUGIN_DIRS=/app/plugins/official:/opt/cosmicsec/plugins
@@ -452,8 +452,8 @@ services:
   # Integration Service — Phase 3 integration hub
   integration-service:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../cosmicsec-services
+      dockerfile: services/integration_service/Dockerfile
     container_name: cosmicsec-integration-service
     environment:
       - ENVIRONMENT=${ENVIRONMENT:-development}
@@ -477,8 +477,8 @@ services:
   # Bug Bounty Service — Phase 5 foundation
   bugbounty-service:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../cosmicsec-services
+      dockerfile: services/bugbounty_service/Dockerfile
     container_name: cosmicsec-bugbounty-service
     environment:
       - ENVIRONMENT=${ENVIRONMENT:-development}
@@ -502,8 +502,8 @@ services:
   # Phase 5 Advanced Service
   phase5-service:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../cosmicsec-services
+      dockerfile: services/phase5_service/Dockerfile
     container_name: cosmicsec-phase5-service
     environment:
       - ENVIRONMENT=${ENVIRONMENT:-development}
@@ -527,8 +527,8 @@ services:
   # Agent Relay — Phase D CLI agent WebSocket hub
   agent-relay:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../cosmicsec-services
+      dockerfile: services/agent_relay/Dockerfile
     container_name: cosmicsec-agent-relay
     environment:
       - ENVIRONMENT=${ENVIRONMENT:-development}
@@ -553,8 +553,8 @@ services:
   # Notification Service — Phase E event notifications
   notification-service:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../cosmicsec-services
+      dockerfile: services/notification_service/Dockerfile
     container_name: cosmicsec-notification-service
     environment:
       - ENVIRONMENT=${ENVIRONMENT:-development}
@@ -578,8 +578,8 @@ services:
   # Celery Worker - Background tasks
   celery-worker:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../cosmicsec-services
+      dockerfile: services/scan_service/Dockerfile
     container_name: cosmicsec-celery-worker
     command: celery -A services.scan_service.main:celery_app worker --loglevel=info --concurrency=4
     environment:
@@ -606,7 +606,7 @@ services:
   frontend:
     image: node:22-alpine
     container_name: cosmicsec-frontend
-    working_dir: /app/frontend
+    working_dir: /app
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3000"
     environment:
       - VITE_API_BASE_URL=http://api-gateway:8000
@@ -618,7 +618,7 @@ services:
     networks:
       - cosmicsec-network
     volumes:
-      - ./:/app
+      - ../cosmicsec-web:/app
 
   # Prometheus — metrics collection
   prometheus:
@@ -673,7 +673,7 @@ services:
   # -------------------------------------------------------------------------
   ingest:
     build:
-      context: ./ingest
+      context: ../cosmicsec-services/ingest
       dockerfile: Dockerfile
     container_name: cosmicsec-ingest
     environment:
@@ -730,7 +730,7 @@ services:
   # -------------------------------------------------------------------------
   broker:
     build:
-      context: ./broker
+      context: ../cosmicsec-core/broker
       dockerfile: Dockerfile
     container_name: cosmicsec-broker
     environment:
